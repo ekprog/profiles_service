@@ -23,7 +23,8 @@ func connectionString() string {
 
 // InitDatabase For Vanilla SQL
 func InitDatabase() (*sql.DB, error) {
-	localDB, err := sql.Open(os.Getenv("DB_DRIVER"), connectionString())
+	s := connectionString()
+	localDB, err := sql.Open(os.Getenv("DB_DRIVER"), s)
 	if err != nil {
 		return nil, err
 	}

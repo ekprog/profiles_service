@@ -15,11 +15,17 @@ func NewProfilesInteractor(log app.Logger, repo domain.ProfilesRepository) *Prof
 }
 
 func (i *ProfilesInteractor) Get(userId int64) (domain.GetProfileResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	profile, err := i.repo.FetchByUserId(userId)
+	if err != nil {
+		return domain.GetProfileResponse{}, err
+	}
+	return domain.GetProfileResponse{StatusCode: domain.Success, Profile: profile}, nil
 }
 
 func (i *ProfilesInteractor) Update(profile domain.Profile) (domain.UpdateProfileResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	err := i.repo.Update(&profile)
+	if err != nil {
+		return domain.UpdateProfileResponse{}, err
+	}
+	return domain.UpdateProfileResponse{StatusCode: domain.Success}, err
 }

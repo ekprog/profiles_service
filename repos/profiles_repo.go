@@ -16,11 +16,21 @@ func NewProfilesRepo(log app.Logger, db *sql.DB) *ProfilesRepo {
 }
 
 func (r *ProfilesRepo) FetchByUserId(i int64) (*domain.Profile, error) {
-	//TODO implement me
-	panic("implement me")
+	var profile = &domain.Profile{}
+	query := `SELECT id,name,photo FROM profiles WHERE id=$1`
+	err := r.db.QueryRow(query, i).Scan(&profile.UserId, &profile.Name, &profile.Photo, &profile.CreatedAt, &profile.UpdatedAt) //TODO implement me
+	switch err {
+	case nil:
+		return profile, nil
+	case sql.ErrNoRows:
+		return nil, nil
+	default:
+		return nil, err
+	}
 }
 
 func (r *ProfilesRepo) Update(profile *domain.Profile) error {
-	//TODO implement me
-	panic("implement me")
+	query := `INSERT INTO profiles (name,photo,created_at,updated_at) VALUES ($1,$2)`
+	_, err := r.db.Exec(query, profile.Name, profile.Photo, profile.CreatedAt, profile.UpdatedAt)
+	return err
 }

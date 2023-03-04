@@ -28,6 +28,20 @@
         }
       }
     },
+    "ListProfileResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "$ref": "#/definitions/StatusResponse"
+        },
+        "profiles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Profile"
+          }
+        }
+      }
+    },
     "Profile": {
       "type": "object",
       "properties": {

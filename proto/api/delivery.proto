@@ -5,6 +5,19 @@ option go_package = "pb/api";
 import "api/app.proto";
 import "api/message.proto";
 
+// LIST PROFILE
+
+message ListProfileRequest {
+  int32 offset = 1;
+  int32 limit = 2;
+  string order_by = 3;
+}
+
+message ListProfileResponse {
+  StatusResponse status = 1;
+  repeated Profile profiles = 2;
+}
+
 // GET PROFILE
 
 message GetProfileRequest {

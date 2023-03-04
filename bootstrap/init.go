@@ -16,10 +16,17 @@ func injectDependencies(db *sql.DB, logger app.Logger) error {
 
 	// Delivery Init
 	tasksDelivery := delivery.NewTasksDeliveryService(logger, profileUcase)
+	assetsDelivery := delivery.NewAssetsDelivery(logger)
 
 	err := app.InitDelivery(tasksDelivery)
 	if err != nil {
 		return err
 	}
+
+	err = app.InitRestDelivery("/assets", assetsDelivery)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }

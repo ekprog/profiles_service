@@ -39,7 +39,7 @@ Full example with JWT Auth microservice using this clean design you can find her
 
 ## Compile gRPC files
 
-```go
+```bash
 protoc -I ./proto \
 --go_out ./pkg/pb \
 --go_opt paths=source_relative \

@@ -11,16 +11,23 @@ type Profile struct {
 }
 
 type ProfilesRepository interface {
+	List(offset, limit int, orderBy string) ([]Profile, error)
 	FetchByUserId(int64) (*Profile, error)
 	Update(*Profile) error
 }
 
 type ProfilesInteractor interface {
+	List(offset, limit int, orderBy string) (ListProfileResponse, error)
 	Get(userId int64) (GetProfileResponse, error)
 	Update(Profile) (UpdateProfileResponse, error)
 }
 
 // Responses (only for UseCase layer)
+
+type ListProfileResponse struct {
+	StatusCode string
+	Profiles   []Profile
+}
 
 type GetProfileResponse struct {
 	StatusCode string

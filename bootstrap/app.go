@@ -36,10 +36,18 @@ func Run(rootPath ...string) error {
 		return err
 	}
 
+	// Rest
+	err = app.InitRest()
+	if err != nil {
+		return err
+	}
+
 	// DI
 	if err := injectDependencies(db, logger); err != nil {
 		return err
 	}
+
+	go app.RunRestServer()
 
 	// Run gRPC and block
 	app.RunGRPCServer()

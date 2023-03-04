@@ -26,6 +26,36 @@ func (d *ProfilesDeliveryService) Init() error {
 	return nil
 }
 
+func (d *ProfilesDeliveryService) List(ctx context.Context, r *pb.ListProfileRequest) (*pb.ListProfileResponse, error) {
+
+	uCaseRes, err := d.profilesUCase.List(int(r.Offset), int(r.Limit), r.OrderBy)
+	if err != nil {
+		return nil, err
+	}
+
+	response := &pb.ListProfileResponse{
+		Status: &pb.StatusResponse{
+			Code:    uCaseRes.StatusCode,
+			Message: uCaseRes.StatusCode,
+		},
+		Profiles: nil,
+	}
+
+	if uCaseRes.StatusCode == domain.Success && uCaseRes.Profiles != nil {
+		for _, profile := range uCaseRes.Profiles {
+			response.Profiles = append(response.Profiles, &pb.Profile{
+				UserId:    profile.UserId,
+				Name:      profile.Name,
+				Photo:     profile.Photo,
+				CreatedAt: timestamppb.New(profile.CreatedAt),
+				UpdatedAt: timestamppb.New(profile.UpdatedAt),
+			})
+		}
+	}
+
+	return response, nil
+}
+
 func (d *ProfilesDeliveryService) Get(ctx context.Context, r *pb.GetProfileRequest) (*pb.GetProfileResponse, error) {
 
 	uCaseRes, err := d.profilesUCase.Get(r.UserId)

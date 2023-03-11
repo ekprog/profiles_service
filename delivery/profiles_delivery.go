@@ -9,7 +9,7 @@ import (
 )
 
 type ProfilesDeliveryService struct {
-	pb.ProfilesServiceServer
+	pb.UnsafeProfilesServiceServer
 	log           app.Logger
 	profilesUCase domain.ProfilesInteractor
 }
@@ -102,5 +102,33 @@ func (d *ProfilesDeliveryService) Update(ctx context.Context, r *pb.UpdateProfil
 		},
 	}
 
+	return response, nil
+}
+
+func (d *ProfilesDeliveryService) GetProf(ctx context.Context, r *pb.GetProfilesRequest) (*pb.GetProfilesResponse, error) {
+	profiles, err := d.profilesUCase.GetProfiles(r.UserId)
+	if err != nil {
+		return nil, err
+	}
+
+	response := &pb.GetProfilesResponse{
+		Status: &pb.StatusResponse{
+			Code:    profiles.StatusCode,
+			Message: profiles.StatusCode,
+		},
+		Profile: nil,
+	}
+
+	if profiles.StatusCode == domain.Success && profiles.Profiles != nil {
+		for _, profile := range profiles.Profiles {
+			response.Profile = append(response.Profile, &pb.Profile{
+				UserId:    profile.UserId,
+				Name:      profile.Name,
+				Photo:     profile.Photo,
+				CreatedAt: timestamppb.New(profile.CreatedAt),
+				UpdatedAt: timestamppb.New(profile.UpdatedAt),
+			})
+		}
+	}
 	return response, nil
 }

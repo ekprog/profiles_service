@@ -11,4 +11,5 @@ service ProfilesService {
   rpc List (ListProfileRequest) returns (ListProfileResponse) {}
   rpc Get (GetProfileRequest) returns (GetProfileResponse) {}
   rpc Update (UpdateProfileRequest) returns (UpdateProfileResponse) {}
+  rpc GetProf (GetProfilesRequest) returns (GetProfilesResponse) {}
 }

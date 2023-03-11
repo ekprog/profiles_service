@@ -29,6 +29,17 @@ message GetProfileResponse {
   Profile profile = 2;
 }
 
+// GET PROFILES
+
+message GetProfilesRequest {
+  repeated int64 user_id = 1;
+}
+
+message GetProfilesResponse {
+  StatusResponse status = 1;
+  repeated Profile profile = 2;
+}
+
 // UPDATE PROFILE
 
 message UpdateProfileRequest {

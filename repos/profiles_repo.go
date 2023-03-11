@@ -15,9 +15,33 @@ func NewProfilesRepo(log app.Logger, db *sql.DB) *ProfilesRepo {
 	return &ProfilesRepo{log: log, db: db}
 }
 
-func (r *ProfilesRepo) List(offset, limit int, orderBy string) ([]domain.Profile, error) {
-	//TODO implement me
-	panic("implement me")
+func (r *ProfilesRepo) GetProfiles(ides []int64) (*[]domain.Profile, error) {
+	var profiles []domain.Profile
+	for _, profId := range ides {
+		var profile domain.Profile
+		query := `SELECT name, photo, created_at, updated_at FROM profiles WHERE user_id=$1`
+		err := r.db.QueryRow(query, profId).Scan(&profile.Name, &profile.Photo, &profile.CreatedAt, &profile.UpdatedAt)
+		if err != nil {
+			return nil, err
+		}
+		profiles = append(profiles, profile)
+	}
+	return &profiles, nil
+}
+
+func (r *ProfilesRepo) List(offset, limit int, orderBy string) (*[]domain.Profile, error) {
+	var profiles []domain.Profile
+	var profile domain.Profile
+	query := `SELECT user_id ,name, photo, created_at, updated_at FROM profiles WHERE user_id<=$1 AND user_id>=$2`
+	rows, err := r.db.Query(query, offset, orderBy)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		rows.Scan(&profile.UserId, &profile.Name, &profile.Photo, &profile.CreatedAt, &profile.UpdatedAt)
+		profiles = append(profiles, profile)
+	}
+	return &profiles, nil
 }
 
 func (r *ProfilesRepo) FetchByUserId(id int64) (*domain.Profile, error) {

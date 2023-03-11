@@ -51,3 +51,12 @@ protoc -I ./proto \
 ./proto/api/**/*.proto
 
 ```
+
+```bash
+protoc -I ./proto \
+--go_out ./pkg/pb \
+--go_opt paths=source_relative \
+--go-grpc_out ./pkg/pb \
+./proto/api/**/*.proto
+
+```

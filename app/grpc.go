@@ -78,11 +78,11 @@ func InitGRPCServer() (*grpc.Server, *runtime.ServeMux, error) {
 
 func RunGRPCServer() {
 
-	gRPCPort := os.Getenv("GRPC_PORT")
+	gRPCAddress := os.Getenv("GRPC_ADDRESS")
 
 	reflection.Register(grpcServer)
 
-	lis, err := net.Listen("tcp", "localhost:"+gRPCPort)
+	lis, err := net.Listen("tcp", gRPCAddress)
 	if err != nil {
 		log.Fatal("%v", err)
 	}

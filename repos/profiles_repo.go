@@ -2,8 +2,11 @@ package repos
 
 import (
 	"database/sql"
+	"fmt"
 	"profile_service/app"
 	"profile_service/domain"
+	"strconv"
+	"strings"
 )
 
 type ProfilesRepo struct {
@@ -17,13 +20,19 @@ func NewProfilesRepo(log app.Logger, db *sql.DB) *ProfilesRepo {
 
 func (r *ProfilesRepo) GetProfiles(ides []int64) (*[]domain.Profile, error) {
 	var profiles []domain.Profile
-	for _, profId := range ides {
-		var profile domain.Profile
-		query := `SELECT name, photo, created_at, updated_at FROM profiles WHERE user_id=$1`
-		err := r.db.QueryRow(query, profId).Scan(&profile.Name, &profile.Photo, &profile.CreatedAt, &profile.UpdatedAt)
-		if err != nil {
-			return nil, err
-		}
+	var profile domain.Profile
+	var str []string
+	for _, ide := range ides {
+		str = append(str, strconv.Itoa(int(ide)))
+	}
+	str1 := strings.Join(str, ",")
+	query := fmt.Sprintf(`SELECT name, photo, created_at, updated_at FROM profiles WHERE user_id IN (%s)`, str1)
+	rows, err := r.db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		rows.Scan(&profile.Name, &profile.Photo, &profile.CreatedAt, &profile.UpdatedAt)
 		profiles = append(profiles, profile)
 	}
 	return &profiles, nil
